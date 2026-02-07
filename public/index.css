@@ -1,0 +1,92 @@
+.modals {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    margin-top: 5rem;
+    gap: 20px;
+}
+
+.chatroom {
+    border: solid black 2px;
+    border-radius: 20px;
+    position: relative;
+    height: 38rem;
+    width: 25rem;
+    background-color: #FF69B4;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.chatroom-header {
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+    margin: 0;
+}
+
+.chatroom-inner {
+    border: solid black 1px;
+    border-radius: 10px;
+    margin: 10px;
+    background-color: #5BCEFA;
+
+    flex: 1;            /* Takes remaining space */
+    overflow-y: auto;
+    padding: 10px;      /* Inner padding instead of huge bottom padding */
+
+}
+
+.text-messages {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    padding: 10px;
+    margin-top: auto;
+}
+
+.text-messages#text {
+    width: 50px;
+}
+
+/* ================ VIDEO CALL ========== */
+
+.videocall {
+    border: solid black 2px;
+    border-radius: 20px;
+    position: relative;
+    height: 38rem;
+    width: 25rem;
+    background-color: #FF69B4;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.videocall-header {
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+    margin: 0;
+}
+
+.videocall-inner {
+    border: solid black 1px;
+    border-radius: 10px;
+    margin: 10px;
+    background-color: #5BCEFA;
+
+    flex: 1;            /* Takes remaining space */
+    overflow-y: auto;
+    padding: 10px;      /* Inner padding instead of huge bottom padding */
+
+}
+
+.videocall-btns {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    padding: 10px;
+    margin-top: auto;
+}
+

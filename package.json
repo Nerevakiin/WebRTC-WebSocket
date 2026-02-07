@@ -1,0 +1,26 @@
+{
+  "name": "simple_videocall",
+  "version": "1.0.0",
+  "description": " a simple chat project where i practice websocket and webRTC for real time chat and video communication ",
+  "homepage": "https://github.com/Nerevakiin/simple_videocall#readme",
+  "bugs": {
+    "url": "https://github.com/Nerevakiin/simple_videocall/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nerevakiin/simple_videocall.git"
+  },
+  "license": "ISC",
+  "author": "stamatis",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "ws": "^8.19.0"
+  }
+}
