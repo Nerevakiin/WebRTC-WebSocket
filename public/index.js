@@ -27,7 +27,8 @@ socket.addEventListener('message', (event) => {
     messagesDiv.scrollTop = messagesDiv.scrollHeight
 })
 
-sendMsgBtn.addEventListener('click', () => {
+sendMsgBtn.addEventListener('click', (e) => {
+    e.preventDefault()
     if (chatInput.value.trim() === '') return 
 
     socket.send(chatInput.value)

@@ -1,11 +1,17 @@
 import express from 'express'
 import { createServer } from 'http'
 import { WebSocketServer, WebSocket } from 'ws'
+import cors from 'cors'
 
 const app = express()
 const PORT = 8000
 
 
+
+app.use(cors({
+    origin: `http://192.168.100.5:${PORT}`,
+    credentials: true
+})) 
 
 app.use(express.json())
 
