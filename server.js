@@ -1,9 +1,10 @@
 import express from 'express'
 import { createServer } from 'http'
-import { WebSocketServer } from 'ws'
+import { WebSocketServer, WebSocket } from 'ws'
 
 const app = express()
 const PORT = 8000
+
 
 
 app.use(express.json())
@@ -19,23 +20,28 @@ const wss = new WebSocketServer({ server }) // pass the HTTP server here
 // ======= WEB SOCKET ===========
 
 wss.on('connection', (ws, request) => {
-    ws.on('error', console.error)
+
 
     console.log('NEW WEBSOCKET CONNECTION')
 
-    // i think this echoes back??
+    
     ws.on('message', (data) => {
+        
         console.log('RECEIVED: ', data.toString())
+
+        wss.clients.forEach((client) => {
+            if (client.readyState === WebSocket.OPEN) {
+                client.send(data.toString())
+            }
+        })
     })
 
-    wss.clients.forEach((client) => {
-        if (client.readyState === WebSocket.OPEN) {
-            client.send(data)
-        }
-    })
 
 
-
+    ws.send(JSON.stringify({
+        type: 'system',
+        text: 'wra gia peoi'
+    }))
 
 
 
