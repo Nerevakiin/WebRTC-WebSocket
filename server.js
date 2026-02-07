@@ -19,7 +19,9 @@ const wss = new WebSocketServer({ server }) // pass the HTTP server here
 
 // ======= WEB SOCKET ===========
 
-wss.on('connection', (ws, request) => {
+wss.on('connection', (ws) => {
+    
+    ws.on('error', console.error)
 
 
     console.log('NEW WEBSOCKET CONNECTION')
@@ -40,7 +42,7 @@ wss.on('connection', (ws, request) => {
 
     ws.send(JSON.stringify({
         type: 'system',
-        text: 'wra gia peoi'
+        text: 'blablabla'
     }))
 
 

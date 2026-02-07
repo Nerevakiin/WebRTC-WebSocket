@@ -31,9 +31,11 @@
     margin: 10px;
     background-color: #5BCEFA;
 
-    flex: 1;            /* Takes remaining space */
+    flex: 1;
+    /* Takes remaining space */
     overflow-y: auto;
-    padding: 10px;      /* Inner padding instead of huge bottom padding */
+    padding: 10px;
+    /* Inner padding instead of huge bottom padding */
 
 }
 
@@ -76,9 +78,11 @@
     margin: 10px;
     background-color: #5BCEFA;
 
-    flex: 1;            /* Takes remaining space */
+    flex: 1;
+    /* Takes remaining space */
     overflow-y: auto;
-    padding: 10px;      /* Inner padding instead of huge bottom padding */
+    padding: 10px;
+    /* Inner padding instead of huge bottom padding */
 
 }
 
@@ -90,3 +94,14 @@
     margin-top: auto;
 }
 
+
+#localVideo {
+    width: 300px;
+    height: 200px;
+    background: black;
+    display: block;
+}
+
+#videocall-inner {
+    padding: 10px;
+}
