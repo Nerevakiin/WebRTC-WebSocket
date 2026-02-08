@@ -12,6 +12,7 @@ const remoteVideo = document.getElementById('remoteVideo')
 // global variables:
 let localStream = null
 let peerConnection = null
+let iceCandidateQueue = [] // This will hold candidates until the description is set
 
 
 const socket = new WebSocket('wss://192.168.100.3:8000/')
@@ -29,49 +30,87 @@ socket.addEventListener('open', (event) => {
 
 socket.addEventListener('message', async (event) => {
 
-    const data = JSON.parse(event.data)
+     // Check if data is JSON (signals) or plain text (chat)
+    let data = JSON.parse(event.data)
 
-    // if its a chat message, display it
     if (data.type === 'chat') {
 
-        const msg = document.createElement('div')
-        msg.textContent = event.data
-        messagesDiv.appendChild(msg)
-        messagesDiv.scrollTop = messagesDiv.scrollHeight
+        displayMessage(data.user, data.text)
 
+    } else if (data.type === 'system') {
+        displayMessage('SYSTEM', data.text)
     }
+
+
 
     // WEB RTC SIGNALING LOGIC
     if (data.offer) {
+
         console.log('received offer, creating answer')
         await handleOffer(data.offer)
 
     } else if (data.answer) {
+
         console.log('received answer...')
         await peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer))
+        processQueuedCandidates()
+
     } else if (data.candidate) {
         console.log('received ICE candidate...')
-        try {
+
+        if (peerConnection && peerConnection.remoteDescription && peerConnection.remoteDescription.type) {
             await peerConnection.addIceCandidate(new RTCIceCandidate(data.candidate))
-        } catch (err) {
-            console.error('Error adding received ice candidate: ', err)
+        } else {
+            console.log('queueing candidate: remoteDescription not set yet')
+            iceCandidateQueue.push(data.candidate)
         }
+    }
+
+    if (data.type === 'hangup') {
+        console.log('the other person hung up')
+        hangUp()
     }
 
 })
 
+async function processQueuedCandidates() {
+    console.log(`Processing ${iceCandidateQueue.length} queued candidates.`)
+    for (const candidate of iceCandidateQueue) {
+        await peerConnection.addIceCandidate(new RTCIceCandidate(candidate))
+    }
+    iceCandidateQueue = []
+}
+
 
 
 // CHAT logic
+
 sendMsgBtn.addEventListener('click', (e) => {
     e.preventDefault()
-    if (chatInput.value.trim() === '') return
+    const text = chatInput.value.trim()
+    if (text === '') return
 
-    
-    
-    socket.send(chatInput.value)
+    // show to my self imediatelly
+    displayMessage('Me: ', text)
+
+    // send it to others
+    const payload = {
+        type: 'chat',
+        user: 'Stranger: ',
+        text: text 
+    }
+
+
+    socket.send(JSON.stringify(payload))
     chatInput.value = ''
 })
+
+function displayMessage(user, text) {
+    const msg = document.createElement('div');
+    msg.innerHTML = `<strong>${user}:</strong> ${text}`;
+    messagesDiv.appendChild(msg);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
 
 
 
@@ -141,6 +180,32 @@ callBtn.addEventListener('click', async (e) => {
 
 })
 
+// this runs when I click the hang up button
+hangUpBtn.addEventListener('click', (e) => {
+    e.preventDefault()
+
+    // 1. run the cleanup locally
+    hangUp()
+
+    // tell the other person via the websocket
+    socket.send(JSON.stringify({ type: 'hangup' }))
+
+})
+
+function hangUp() {
+    console.log('hanging up the call...')
+
+    if (peerConnection) {
+        peerConnection.close()
+        peerConnection = null 
+    }
+
+    remoteVideo.srcObject = null 
+
+    iceCandidateQueue = []
+
+}
+
 
 // this runs when the OTHER person receives your offer
 async function handleOffer(offer) {
@@ -151,13 +216,11 @@ async function handleOffer(offer) {
     await peerConnection.setLocalDescription(answer)
 
     console.log('sending answer...')
-    await peerConnection.setLocalDescription(answer)
-
-    console.log('sending answer...')
+    
     socket.send(JSON.stringify({ answer: answer }))
 
+    processQueuedCandidates()
 
 }
-
 
 
