@@ -1,5 +1,7 @@
 import express from 'express'
-import { createServer } from 'http'
+import https from 'https'
+import fs from 'fs'
+import path from 'path'
 import { WebSocketServer, WebSocket } from 'ws'
 import cors from 'cors'
 
@@ -7,9 +9,16 @@ const app = express()
 const PORT = 8000
 
 
+// creating the options object with the files created by the OpenSSL command 
+const serverOptions = {
+    key: fs.readFileSync('key.pem'),
+    cert: fs.readFileSync('cert.pem')
+}
+
+
 
 app.use(cors({
-    origin: `http://192.168.100.5:${PORT}`,
+    origin: `https://192.168.100.3:${PORT}`,
     credentials: true
 })) 
 
@@ -19,8 +28,10 @@ app.use(express.json())
 app.use(express.static('public'))
 
 
-const server = createServer(app)
+// create the HTTPS server passing the options and the express app
+const server = https.createServer(serverOptions, app)
 
+// Connect the WebSocket server to the HTTPS server
 const wss = new WebSocketServer({ server }) // pass the HTTP server here
 
 // ======= WEB SOCKET ===========
@@ -38,7 +49,7 @@ wss.on('connection', (ws) => {
         console.log('RECEIVED: ', data.toString())
 
         wss.clients.forEach((client) => {
-            if (client.readyState === WebSocket.OPEN) {
+            if (client !== ws && client.readyState === WebSocket.OPEN) {
                 client.send(data.toString())
             }
         })

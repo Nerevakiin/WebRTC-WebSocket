@@ -102,6 +102,13 @@
     display: block;
 }
 
+#remoteVideo {
+    width: 300px;
+    height: 200px;
+    background: red;
+    display: block;
+}
+
 #videocall-inner {
     padding: 10px;
 }
