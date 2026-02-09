@@ -16,14 +16,12 @@ const serverOptions = {
 }
 
 
-
 app.use(cors({
     origin: `https://192.168.100.3:${PORT}`,
     credentials: true
 })) 
 
 app.use(express.json())
-
 
 app.use(express.static('public'))
 
@@ -40,10 +38,8 @@ wss.on('connection', (ws) => {
     
     ws.on('error', console.error)
 
-
     console.log('NEW WEBSOCKET CONNECTION')
 
-    
     ws.on('message', (data) => {
         
         console.log('RECEIVED: ', data.toString())
@@ -55,15 +51,10 @@ wss.on('connection', (ws) => {
         })
     })
 
-
-
     ws.send(JSON.stringify({
         type: 'system',
         text: 'blablabla'
     }))
-
-
-
 })
 
 

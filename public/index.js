@@ -100,7 +100,6 @@ sendMsgBtn.addEventListener('click', (e) => {
         text: text 
     }
 
-
     socket.send(JSON.stringify(payload))
     chatInput.value = ''
 })
